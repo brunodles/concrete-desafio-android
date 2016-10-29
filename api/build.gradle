@@ -1,0 +1,59 @@
+apply plugin: 'java'
+apply plugin: 'me.tatarka.retrolambda'
+
+retrolambda {
+    javaVersion JavaVersion.VERSION_1_7
+    defaultMethods true
+    incremental true
+    jvmArgs '-noverify'
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+configurations {
+    mocked
+}
+sourceSets {
+    mocked {
+        java {
+            srcDirs = ['src/mocked/java']
+        }
+        resources {
+            srcDirs = ['src/mocked/resources']
+        }
+    }
+    test {
+        resources.srcDirs 'src/test/resources'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile 'io.reactivex:rxjava:1.2.1'
+
+    compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+
+    compile 'com.google.code.gson:gson:2.6.2'
+
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.assertj:assertj-core:3.4.1'
+
+    testCompile 'com.mscharhag.oleaster:oleaster-matcher:0.1.2'
+    testCompile 'com.mscharhag.oleaster:oleaster-runner:0.1.2'
+    testCompile 'com.github.brunodles:OleasterSuiteRunner:0.1'
+
+//    testCompile 'org.mockito:mockito-core:2.0.54-beta' // don't update to latest version, it have conflicts with power mock
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
+    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
+
+    testCompile "com.github.tomakehurst:wiremock:2.2.2"
+}
+
