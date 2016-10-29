@@ -1,0 +1,135 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.github.brunodles.IpGetter'
+
+retrolambda {
+    javaVersion JavaVersion.VERSION_1_7
+    defaultMethods true
+    incremental true
+}
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
+    publishNonDefault true
+    testBuildType "release"
+    signingConfigs {
+        release {
+            storeFile rootProject.file("keystore/keystore.jks")
+            storePassword "concrete"
+            keyAlias "githubpopular"
+            keyPassword "solutions"
+        }
+
+        debugKey {
+            keyAlias 'android'
+            storeFile file('~/.android/debug.keystore')
+        }
+    }
+    defaultConfig {
+        applicationId "com.github.brunodles.githubpopular.app"
+        minSdkVersion 14
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "API_URL", '"http://localhost"'
+    }
+    productFlavors {
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "API_URL", '"https://api.github.com"'
+        }
+        debug {
+            buildConfigField "String", "API_URL", "\"${getApiUrl()}\""
+            versionNameSuffix '-debug'
+        }
+        mocked {
+            initWith(buildTypes.debug)
+            buildConfigField "String", "API_URL", '"navigation.com"'
+            versionNameSuffix '-mocked'
+            signingConfig debug.signingConfig
+            debuggable true
+        }
+    }
+    sourceSets {
+        moked.setRoot('src/debug')
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+
+//    compile project(':api')
+    releaseCompile project(':api')
+    debugCompile project(':api')
+    mokedCompile project(path: ':api', configuration: 'mocked')
+
+    compile 'com.android.support:support-annotations:24.2.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+
+    compile 'io.reactivex:rxjava:1.2.1'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.trello:rxlifecycle:0.8.0'
+//    compile 'com.trello:rxlifecycle-android:0.8.0'
+//    compile 'com.trello:rxlifecycle-components:0.8.0'
+    compile 'com.f2prateek.rx.preferences:rx-preferences:1.0.2'
+    compile 'com.cantrowitz:rxbroadcast:1.1.0'
+
+//    compile 'io.vokal.lint:rxlifecycle:1.0.3'
+//    compile 'io.vokal.lint:todo:1.0.3'
+    compile 'nl.littlerobots.rxlint:rxlint:1.0'
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.siyamed:android-shape-imageview:0.9.3@aar'
+
+    debugCompile 'com.facebook.stetho:stetho:1.4.1'
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
+    compile 'com.facebook.stetho:stetho:1.4.1'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.assertj:assertj-core:3.4.1'
+
+//    testCompile 'org.mockito:mockito-core:2.0.54-beta' // don't update to latest version, it have conflicts with power mock
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.5'
+    testCompile 'org.powermock:powermock-module-junit4:1.6.5'
+
+    testCompile('org.robolectric:robolectric:3.1-rc1') {
+        exclude module: 'httpcore'
+        exclude module: 'ant-luncher'
+        exclude module: 'commons-codec'
+        exclude module: 'ant'
+        exclude module: 'ant-commons-net'
+        exclude module: 'commons'
+        exclude module: 'commons-lang'
+    }
+
+    testCompile 'com.mscharhag.oleaster:oleaster-matcher:0.1.2'
+    testCompile 'com.mscharhag.oleaster:oleaster-runner:0.1.2'
+    testCompile 'com.github.brunodles:OleasterSuiteRunner:0.1'
+
+    androidTestCompile 'junit:junit:4.12'
+
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+
+    androidTestCompile 'com.android.support:support-annotations:24.2.1'
+
+    testCompile 'com.google.code.findbugs:jsr305:3.0.1'
+    androidTestCompile 'com.google.code.findbugs:jsr305:3.0.1'
+}
