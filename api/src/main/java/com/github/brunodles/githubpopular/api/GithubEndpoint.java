@@ -24,8 +24,8 @@ public interface GithubEndpoint {
     );
 
     @GET("repos/{owner}/{repository}/pulls")
-    Observable<List<PullRequest>> repositoryPulls(
+    Observable<List<PullRequest>> pullRequests(
             @Path("owner") String owner,
-            @Path("reposotory") String repository
+            @Path("repository") String repository
     );
 }

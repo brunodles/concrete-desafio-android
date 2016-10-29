@@ -8,6 +8,8 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.List;
 
 import retrofit2.adapter.rxjava.HttpException;
 import rx.functions.Action0;
@@ -59,16 +61,13 @@ public class GithubEndpointTest {
                 folder = File.createTempFile("tmp", ".tmp");
                 githubEndpoint = new Api(API_URL, folder).github();
             });
-            after(() -> {
-                wireMockServer.stop();
-            });
 
-            describe("When user get Java repositories ordered by stars", () -> {
+            after(() -> wireMockServer.stop());
+
+            describe("When list Java repositories ordered by stars", () -> {
 
                 beforeEach(() -> {
-                    onNext = mock(Action1.class);
-                    onError = mock(Action1.class);
-                    onComplete = mock(Action0.class);
+                    resetListeners();
                     githubEndpoint.searchRepositories("language:Java", "stars", 1)
                             .toBlocking()
                             .subscribe(onNext, onError, onComplete);
@@ -76,46 +75,103 @@ public class GithubEndpointTest {
 
                 describe("When the request is valid", () -> {
 
-                    before(() -> {
-                        WireMock.reset();
-                        stubFor(get(urlPathEqualTo("/search/repositories"))
-                                .withQueryParam("q", equalTo("language:Java"))
-                                .withQueryParam("sort", equalTo("stars"))
-                                .withQueryParam("page", equalTo("1"))
-                                .willReturn(aResponse()
-                                        .withStatus(200)
-                                        .withBody(resourceFile("resultRepositoryGood.json"))
-                                )
-                        );
-                    });
+                    before(this::stubForRepositories);
 
                     it("should return a SearchEvenlop", () -> {
                         verify(onNext).call(any(SearchEvenlope.class));
                         verify(onComplete).call();
                     });
+
                     it("should not call on error", () -> {
                         verifyZeroInteractions(onError);
                     });
+
                 });
-                describe("When the request is invalid", () -> {
-                    before(() -> {
-                        WireMock.reset();
-                        stubFor(get(urlPathEqualTo("/search/repositories"))
-                                .willReturn(aResponse()
-                                        .withStatus(404)
-                                        .withBody(resourceFile("resultBad.json"))
-                                )
-                        );
+
+                checkInteractionsForFailure("/search/repositories");
+            });
+
+            describe("When list pull requests from 'facebook/react-native'", () -> {
+
+                beforeEach(() -> {
+                    resetListeners();
+                    githubEndpoint.pullRequests("facebook", "react-native")
+                            .toBlocking()
+                            .subscribe(onNext, onError, onComplete);
+                });
+
+                describe("When the request is valid", () -> {
+
+                    before(this::stubForPullRequests);
+
+                    it("should return a List of PullRequests", () -> {
+                        verify(onNext).call(any(List.class));
+                        verify(onComplete).call();
                     });
 
                     it("should not call on error", () -> {
-                        verify(onError).call(any(HttpException.class));
+                        verifyZeroInteractions(onError);
                     });
-                    it("should no call onNext", () -> verifyZeroInteractions(onNext));
-                    it("should no call onComplete", () -> verifyZeroInteractions(onComplete));
+
                 });
+
+                checkInteractionsForFailure("/repos/facebook/react-native/pulls");
+
             });
 
         });
+    }
+
+    private void stubForPullRequests() throws FileNotFoundException {
+        WireMock.reset();
+        stubFor(get(urlPathEqualTo("/repos/facebook/react-native/pulls"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody(resourceFile("resultPullRequestGood.json"))
+                )
+        );
+    }
+
+    private void stubForRepositories() throws FileNotFoundException {
+        WireMock.reset();
+        stubFor(get(urlPathEqualTo("/search/repositories"))
+                .withQueryParam("q", equalTo("language:Java"))
+                .withQueryParam("sort", equalTo("stars"))
+                .withQueryParam("page", equalTo("1"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody(resourceFile("resultRepositoryGood.json"))
+                )
+        );
+    }
+
+    private void checkInteractionsForFailure(String url) {
+        describe("When the request is invalid", () -> {
+
+            before(() -> {
+                WireMock.reset();
+                stubFor(get(urlPathEqualTo(url))
+                        .willReturn(aResponse()
+                                .withStatus(404)
+                                .withBody(resourceFile("resultBad.json"))
+                        )
+                );
+            });
+
+            it("should not call on error", () -> {
+                verify(onError).call(any(HttpException.class));
+            });
+
+            it("should no call onNext", () -> verifyZeroInteractions(onNext));
+
+            it("should no call onComplete", () -> verifyZeroInteractions(onComplete));
+
+        });
+    }
+
+    private void resetListeners() {
+        onNext = mock(Action1.class);
+        onError = mock(Action1.class);
+        onComplete = mock(Action0.class);
     }
 }
