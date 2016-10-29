@@ -56,12 +56,11 @@ public class GithubEndpointTest {
             before(() -> {
                 WireMock.configureFor(WIREMOCK_PORT);
                 wireMockServer.start();
-                folder = new File("tmp");
+                folder = File.createTempFile("tmp", ".tmp");
                 githubEndpoint = new Api(API_URL, folder).github();
             });
             after(() -> {
                 wireMockServer.stop();
-                folder.delete();
             });
 
             describe("When user get Java repositories ordered by stars", () -> {
