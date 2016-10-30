@@ -71,8 +71,9 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Vi
     }
 
     public void addList(List<Repository> list) {
+        int position = this.list.size();
         this.list.addAll(list);
-        notifyDataSetChanged();
+        notifyItemRangeInserted(position, list.size());
     }
 
     public void setList(List<Repository> list) {
