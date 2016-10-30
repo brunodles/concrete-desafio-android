@@ -8,5 +8,5 @@ import java.util.List;
 public class SearchEvenlope {
     public Long total_count;
     public Boolean incomplete_results;
-    public List<Item> items;
+    public List<Repository> items;
 }
