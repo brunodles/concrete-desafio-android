@@ -36,6 +36,8 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "API_URL", '"http://localhost"'
+        buildConfigField "String", "API_CLIENT_ID", '"a6727ed6f6e868550c17"'
+        buildConfigField "String", "API_CLIENT_SECRET", '"76035bdf010ffc8ac7acb2adc02abd80caf6d96a"'
         vectorDrawables.useSupportLibrary = true
     }
     productFlavors {
