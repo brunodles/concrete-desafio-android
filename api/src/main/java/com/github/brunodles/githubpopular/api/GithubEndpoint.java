@@ -17,7 +17,7 @@ import rx.Observable;
 
 public interface GithubEndpoint {
 
-    @Headers({"User-Agent: Github-Popular"})
+    @Headers({"UserShort-Agent: Github-Popular"})
     @GET("search/repositories")
     Observable<SearchEvenlope> searchRepositories(
             @Query("q") String query,
@@ -25,7 +25,7 @@ public interface GithubEndpoint {
             @Query("page") int page
     );
 
-    @Headers({"User-Agent: Github-Popular"})
+    @Headers({"UserShort-Agent: Github-Popular"})
     @GET("repos/{owner}/{repository}/pulls")
     Observable<List<PullRequest>> pullRequests(
             @Path("owner") String owner,

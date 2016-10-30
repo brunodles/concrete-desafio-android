@@ -7,6 +7,6 @@ public class Commit {
     public String label;
     public String ref;
     public String sha;
-    public User user;
+    public UserShort user;
     public Repository repo;
 }

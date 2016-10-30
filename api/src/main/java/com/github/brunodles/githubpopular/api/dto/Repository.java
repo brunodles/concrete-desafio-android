@@ -9,7 +9,7 @@ public class Repository {
     public Long id;
     public String name;
     public String full_name;
-    public User owner;
+    public UserShort owner;
     @SerializedName("private") public Boolean isPrivate;
     public String html_url;
     public String description;

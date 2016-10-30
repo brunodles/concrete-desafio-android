@@ -3,7 +3,7 @@ package com.github.brunodles.githubpopular.api.dto;
 /**
  * Created by bruno on 29/10/16.
  */
-public class User {
+public class UserShort {
     public String login;
     public Long id;
     public String avatar_url;

@@ -19,15 +19,15 @@ public class PullRequest {
     public String state;
     public Boolean locked;
     public String title;
-    public User user;
+    public UserShort user;
     public String body;
     public String created_at;
     public String updated_at;
     public Date closed_at;
     public Date merged_at;
     public String merge_commit_sha;
-    public User assignee;
-    public List<User> assignees;
+    public UserShort assignee;
+    public List<UserShort> assignees;
     //        public Milestone milestone;
     public String commits_url;
     public String review_comments_url;
