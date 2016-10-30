@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by bruno on 29/10/16.
  */
-public class Repo {
+public class Repository {
     public Long id;
     public String name;
     public String full_name;
