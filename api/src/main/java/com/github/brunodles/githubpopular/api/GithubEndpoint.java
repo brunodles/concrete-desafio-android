@@ -2,6 +2,7 @@ package com.github.brunodles.githubpopular.api;
 
 import com.github.brunodles.githubpopular.api.dto.PullRequest;
 import com.github.brunodles.githubpopular.api.dto.SearchEvenlope;
+import com.github.brunodles.githubpopular.api.dto.User;
 
 import java.util.List;
 
@@ -31,4 +32,8 @@ public interface GithubEndpoint {
             @Path("owner") String owner,
             @Path("repository") String repository
     );
+
+    @Headers({"UserShort-Agent: Github-Popular"})
+    @GET("users/{username}")
+    Observable<User> user(@Path("username") String owner);
 }
