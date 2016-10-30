@@ -12,6 +12,9 @@ android {
     buildToolsVersion "24.0.1"
     publishNonDefault true
     testBuildType "release"
+    dataBinding {
+        enabled = true
+    }
     signingConfigs {
         release {
             storeFile rootProject.file("keystore/keystore.jks")
@@ -33,6 +36,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "API_URL", '"http://localhost"'
+        vectorDrawables.useSupportLibrary = true
     }
     productFlavors {
     }
@@ -46,6 +50,13 @@ android {
             buildConfigField "String", "API_URL", "\"${getApiUrl()}\""
             versionNameSuffix '-debug'
         }
+        staging {
+            initWith(buildTypes.debug)
+            buildConfigField "String", "API_URL", '"https://api.github.com"'
+            versionNameSuffix '-staging'
+            signingConfig debug.signingConfig
+            debuggable true
+        }
         mocked {
             initWith(buildTypes.debug)
             buildConfigField "String", "API_URL", '"navigation.com"'
@@ -55,7 +66,8 @@ android {
         }
     }
     sourceSets {
-        moked.setRoot('src/debug')
+        mocked.setRoot('src/debug')
+        staging.setRoot('src/debug')
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -66,14 +78,18 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-
 //    compile project(':api')
     releaseCompile project(':api')
     debugCompile project(':api')
-    mokedCompile project(path: ':api', configuration: 'mocked')
+    stagingCompile project(':api')
+//    mokedCompile project(path: ':api', configuration: 'mocked')
 
     compile 'com.android.support:support-annotations:24.2.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:palette-v7:24.2.1'
+    compile 'com.android.support:cardview-v7:24.2.1'
+
 
     compile 'io.reactivex:rxjava:1.2.1'
     compile 'io.reactivex:rxandroid:1.2.1'
@@ -93,6 +109,7 @@ dependencies {
     debugCompile 'com.facebook.stetho:stetho:1.4.1'
 
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    stagingCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 
