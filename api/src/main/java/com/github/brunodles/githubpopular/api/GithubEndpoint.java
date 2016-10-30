@@ -6,6 +6,7 @@ import com.github.brunodles.githubpopular.api.dto.SearchEvenlope;
 import java.util.List;
 
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -16,6 +17,7 @@ import rx.Observable;
 
 public interface GithubEndpoint {
 
+    @Headers({"User-Agent: Github-Popular"})
     @GET("search/repositories")
     Observable<SearchEvenlope> searchRepositories(
             @Query("q") String query,
@@ -23,6 +25,7 @@ public interface GithubEndpoint {
             @Query("page") int page
     );
 
+    @Headers({"User-Agent: Github-Popular"})
     @GET("repos/{owner}/{repository}/pulls")
     Observable<List<PullRequest>> pullRequests(
             @Path("owner") String owner,
