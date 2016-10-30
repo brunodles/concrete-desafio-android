@@ -44,7 +44,8 @@ public class RepositoryListActivity extends RxAppCompatActivity {
         binding.toolbar.title.setText("Java Pop");
 
         subscriptions = new CompositeSubscription();
-        github = new Api(BuildConfig.API_URL, getCacheDir()).github();
+        github = new Api(BuildConfig.API_URL, getCacheDir(), () -> BuildConfig.API_CLIENT_ID,
+                () -> BuildConfig.API_CLIENT_SECRET).github();
 
         setupRecyclerView(binding.recyclerView);
 
