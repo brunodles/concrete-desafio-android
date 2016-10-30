@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="com.github.brunodles.githubpopular.app.R" />
+        <import type="com.github.brunodles.githubpopular.app.R"/>
 
         <variable
             name="repository"
-            type="com.github.brunodles.githubpopular.api.dto.Repository" />
+            type="com.github.brunodles.githubpopular.api.dto.Repository"/>
 
         <variable
             name="user"
-            type="com.github.brunodles.githubpopular.api.dto.User" />
+            type="com.github.brunodles.githubpopular.api.dto.User"/>
     </data>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="128dp"
-        android:minHeight="100dp"
+        android:minHeight="128dp"
         app:cardCornerRadius="4dp"
         app:cardElevation="2dp"
         app:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/name"
@@ -42,12 +42,12 @@
                 android:layout_toLeftOf="@+id/userImage"
                 android:layout_toStartOf="@id/userImage"
                 android:text="@{repository.name}"
-                tools:text="Gradle Helpers" />
+                tools:text="Gradle Helpers"/>
 
             <TextView
                 android:id="@+id/description"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@id/name"
@@ -55,71 +55,71 @@
                 android:layout_marginStart="8dp"
                 android:layout_toLeftOf="@id/userImage"
                 android:layout_toStartOf="@id/userImage"
-                android:maxLength="140"
+                android:maxLines="2"
                 android:text="@{repository.description}"
-                tools:text="A set of tools to make developers life easier" />
+                tools:text="A set of tools to make developers life easier"/>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/stars"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/description"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:layout_toLeftOf="@+id/forks"
                 android:drawableLeft="@drawable/ic_star"
                 android:drawableTint="#e19b19"
                 android:gravity="center"
                 android:text="@{String.valueOf(repository.stargazers_count)}"
                 android:textColor="#e19b19"
-                tools:text="9000" />
+                tools:text="9000"/>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/forks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/description"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_toRightOf="@+id/stars"
+                android:layout_toLeftOf="@+id/userFullname"
                 android:drawableLeft="@drawable/ic_fork"
                 android:drawableTint="#e19b19"
                 android:gravity="center"
                 android:text="@{String.valueOf(repository.forks_count)}"
                 android:textColor="#e19b19"
-                tools:text="9000" />
+                tools:text="9000"/>
 
-            <!--<com.github.siyamed.shapeimageview.mask.PorterShapeImageView-->
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/userImage"
                 android:layout_width="112dp"
                 android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:foregroundGravity="center"
+                android:layout_alignParentTop="true"
                 android:scaleType="centerCrop"
                 android:src="@{repository.owner.avatar_url}"
                 app:placeHolder="@{R.drawable.face}"
-                app:siShape="@drawable/mask_user_image"
-                tools:src="@drawable/face" />
+                tools:src="@drawable/face"/>
 
             <TextView
                 android:id="@+id/userFullname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/userImage"
                 android:layout_alignLeft="@+id/userImage"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignStart="@+id/userImage"
+                android:layout_alignRight="@+id/userImage"
                 android:background="#a000"
                 android:gravity="end"
                 android:paddingBottom="8dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:text="@{user.name}"
-                tools:text="Bruno de Lima" />
+                tools:text="Bruno de Lima"/>
 
             <TextView
                 android:id="@+id/userLogin"
@@ -128,9 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/userFullname"
                 android:layout_alignLeft="@+id/userImage"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignStart="@+id/userImage"
+                android:layout_alignRight="@+id/userImage"
                 android:background="#a000"
                 android:gravity="end"
                 android:paddingLeft="8dp"
@@ -138,7 +136,7 @@
                 android:paddingTop="8dp"
                 android:text="@{user.login}"
                 android:textColor="#ffff"
-                tools:text="brunodles" />
+                tools:text="brunodles"/>
 
             <android.support.v7.widget.AppCompatImageView
                 android:layout_width="8dp"
@@ -148,7 +146,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignStart="@+id/userImage"
                 android:scaleType="fitXY"
-                app:srcCompat="@drawable/overdraw_user_image" />
+                app:srcCompat="@drawable/overdraw_user_image"/>
 
         </RelativeLayout>
 
