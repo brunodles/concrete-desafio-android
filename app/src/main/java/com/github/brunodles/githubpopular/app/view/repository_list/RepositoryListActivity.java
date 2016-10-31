@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.widget.Toast;
 
 import com.github.brunodles.githubpopular.api.Api;
 import com.github.brunodles.githubpopular.api.GithubEndpoint;
@@ -67,8 +68,6 @@ public class RepositoryListActivity extends RxAppCompatActivity {
 
         setupRecyclerView(binding.recyclerView);
 
-        repositoryAdapter.setUserProvider(github::user);
-
         lifecycle().filter(event -> event == ActivityEvent.DESTROY)
                 .subscribe(e -> subscriptions.unsubscribe());
     }
@@ -86,6 +85,9 @@ public class RepositoryListActivity extends RxAppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
 
+        repositoryAdapter.setUserProvider(github::user);
+        repositoryAdapter.setOnItemClickListener(this::onItemClick);
+
         recyclerView.setAdapter(repositoryAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);
         VerticalSpaceItemDecoration itemDecoration = new VerticalSpaceItemDecoration(
@@ -98,6 +100,9 @@ public class RepositoryListActivity extends RxAppCompatActivity {
 
         lifecycle().filter(event -> event == ActivityEvent.DESTROY)
                 .subscribe(e -> recyclerView.removeOnScrollListener(scrollListener));
+    }
+
+    private void onItemClick(Integer integer, Repository repository) {
     }
 
     private void loadPage(int page) {

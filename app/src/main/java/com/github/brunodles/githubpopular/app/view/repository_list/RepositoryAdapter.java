@@ -18,6 +18,7 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action2;
 import rx.functions.Func1;
 
 /**
@@ -31,6 +32,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Vi
     private WeakReference<LayoutInflater> layoutInflater;
     private final List<Repository> list = new ArrayList<>();
     private Func1<String, Observable<User>> provider;
+    private Action2<Integer, Repository> listener;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -58,6 +60,8 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Vi
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(holder.binding::setUser, LogRx.e(TAG, "onBindViewHolder: "));
         }
+        if (listener != null)
+            holder.itemView.setOnClickListener(v -> listener.call(holder.getAdapterPosition(), repository));
     }
 
     @Override
@@ -91,6 +95,10 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Vi
 
     public void setUserProvider(Func1<String, Observable<User>> provider) {
         this.provider = provider;
+    }
+
+    public void setOnItemClickListener(Action2<Integer, Repository> listener) {
+        this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
