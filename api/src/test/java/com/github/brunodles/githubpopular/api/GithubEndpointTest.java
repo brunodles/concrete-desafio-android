@@ -40,8 +40,8 @@ public class GithubEndpointTest {
 
     private static final int WIREMOCK_PORT = 8089;
     private static final String API_URL = "http://localhost:" + WIREMOCK_PORT;
-    public static final String CLIENT_ID = "a6727ed6f6e868550c17";
-    public static final String CLIENT_KEY = "76035bdf010ffc8ac7acb2adc02abd80caf6d96a";
+    public static final String CLIENT_ID = "myClientId";
+    public static final String CLIENT_KEY = "myAwesomeSecret";
 
     private WireMockServer wireMockServer = new WireMockServer(
             wireMockConfig().port(WIREMOCK_PORT));
