@@ -1,24 +1,25 @@
 package com.github.brunodles.githubpopular.app.view.repository_list;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 
 import com.github.brunodles.githubpopular.api.Api;
 import com.github.brunodles.githubpopular.api.GithubEndpoint;
 import com.github.brunodles.githubpopular.app.BuildConfig;
 import com.github.brunodles.githubpopular.app.R;
 import com.github.brunodles.githubpopular.app.databinding.ActivityListRepositoryBinding;
+import com.github.brunodles.githubpopular.app.databinding.NavigationDrawerLayoutBinding;
 import com.github.brunodles.recyclerview.EndlessRecyclerOnScrollListener;
 import com.github.brunodles.recyclerview.VerticalSpaceItemDecoration;
 import com.github.brunodles.utils.LogRx;
 import com.trello.rxlifecycle.android.ActivityEvent;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
-import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -34,6 +35,7 @@ public class RepositoryListActivity extends RxAppCompatActivity {
 
     private static final String TAG = "RepositoryListActivity";
 
+    private NavigationDrawerLayoutBinding navigationDrawer;
     private ActivityListRepositoryBinding binding;
     private RepositoryAdapter repositoryAdapter;
     private CompositeSubscription subscriptions;
@@ -42,8 +44,13 @@ public class RepositoryListActivity extends RxAppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_list_repository);
-        binding.toolbar.title.setText("Java Pop");
+        LayoutInflater layoutInflater = getLayoutInflater();
+        navigationDrawer = NavigationDrawerLayoutBinding.inflate(layoutInflater);
+        binding = ActivityListRepositoryBinding.inflate(layoutInflater, navigationDrawer.navigationContainer, true);
+        setContentView(navigationDrawer.getRoot());
+
+        setupToolbar(binding.toolbarInclude.toolbar);
+        binding.toolbarInclude.toolbar.setTitle("Java Pop");
 
         subscriptions = new CompositeSubscription();
         github = new Api(BuildConfig.API_URL, getCacheDir(), () -> BuildConfig.API_CLIENT_ID,
@@ -55,6 +62,13 @@ public class RepositoryListActivity extends RxAppCompatActivity {
 
         lifecycle().filter(event -> event == ActivityEvent.DESTROY)
                 .subscribe(e -> subscriptions.unsubscribe());
+    }
+
+    private void setupToolbar(Toolbar toolbar) {
+        toolbar.setNavigationIcon(R.drawable.ic_menu);
+        toolbar.setNavigationOnClickListener(v ->
+                navigationDrawer.navigationLayout.openDrawer(navigationDrawer.navigationItemsInclude.navigationItems)
+        );
     }
 
     private void setupRecyclerView(RecyclerView recyclerView) {

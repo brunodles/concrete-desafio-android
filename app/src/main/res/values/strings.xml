@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">GithubPopular</string>
+    <string name="myName">Bruno de Lima</string>
+    <string name="about">About</string>
 </resources>

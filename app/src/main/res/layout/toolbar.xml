@@ -4,36 +4,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/toolbar_root"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/app_name"
-        >
+        android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:title="@string/app_name"
+            >
 
-            <TextView
-                android:id="@+id/title"
-                style="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorPrimary"
-                android:gravity="center_vertical"
-                android:padding="10dp"
-                android:text="@string/app_name"/>
+        </android.support.v7.widget.Toolbar>
 
-            <android.support.v7.widget.AppCompatImageView
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:scaleType="fitXY"
-                android:tint="@color/colorPrimary"
-                app:srcCompat="@drawable/toolbar_tip"/>
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:scaleType="fitXY"
+            android:tint="@color/colorPrimary"
+            app:srcCompat="@drawable/toolbar_tip"/>
+    </LinearLayout>
 </layout>

@@ -29,7 +29,7 @@
             app:elevation="0dp">
 
             <include
-                android:id="@+id/toolbar"
+                android:id="@+id/toolbarInclude"
                 layout="@layout/toolbar"
                 app:layout_scrollFlags="scroll|enterAlways"/>
 
