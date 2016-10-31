@@ -40,6 +40,8 @@ public class GithubEndpointTest {
 
     private static final int WIREMOCK_PORT = 8089;
     private static final String API_URL = "http://localhost:" + WIREMOCK_PORT;
+    public static final String CLIENT_ID = "a6727ed6f6e868550c17";
+    public static final String CLIENT_KEY = "76035bdf010ffc8ac7acb2adc02abd80caf6d96a";
 
     private WireMockServer wireMockServer = new WireMockServer(
             wireMockConfig().port(WIREMOCK_PORT));
@@ -59,7 +61,7 @@ public class GithubEndpointTest {
                 WireMock.configureFor(WIREMOCK_PORT);
                 wireMockServer.start();
                 folder = File.createTempFile("tmp", ".tmp");
-                githubEndpoint = new Api(API_URL, folder).github();
+                githubEndpoint = new Api(API_URL, folder, () -> CLIENT_ID, () -> CLIENT_KEY).github();
             });
 
             after(() -> wireMockServer.stop());
