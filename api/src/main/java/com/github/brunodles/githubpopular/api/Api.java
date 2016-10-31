@@ -2,6 +2,7 @@ package com.github.brunodles.githubpopular.api;
 
 import com.github.brunodles.githubpopular.api.gson.BooleanDeserializer;
 import com.github.brunodles.githubpopular.api.gson.MixedDateDeserializer;
+import com.github.brunodles.okhttp.CacheOverrideInterceptor;
 import com.github.brunodles.okhttp.GithubAuthInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,6 +37,7 @@ public class Api {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(logging)
                 .addInterceptor(githubAuthIntecerptor)
+                .addInterceptor(new CacheOverrideInterceptor())
                 .cache(cache)
                 .build();
 

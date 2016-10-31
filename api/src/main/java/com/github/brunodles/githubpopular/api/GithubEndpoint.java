@@ -3,6 +3,7 @@ package com.github.brunodles.githubpopular.api;
 import com.github.brunodles.githubpopular.api.dto.PullRequest;
 import com.github.brunodles.githubpopular.api.dto.SearchEvenlope;
 import com.github.brunodles.githubpopular.api.dto.User;
+import com.github.brunodles.okhttp.CacheOverrideInterceptor;
 import com.github.brunodles.okhttp.GithubAuthInterceptor;
 
 import java.util.List;
@@ -20,7 +21,8 @@ import rx.Observable;
 public interface GithubEndpoint {
 
     @Headers({"UserShort-Agent: Github-Popular",
-            GithubAuthInterceptor.HEADER})
+            GithubAuthInterceptor.HEADER,
+            CacheOverrideInterceptor.HEADER_KEY+":86400"})
     @GET("search/repositories")
     Observable<SearchEvenlope> searchRepositories(
             @Query("q") String query,
@@ -29,7 +31,8 @@ public interface GithubEndpoint {
     );
 
     @Headers({"UserShort-Agent: Github-Popular",
-            GithubAuthInterceptor.HEADER})
+            GithubAuthInterceptor.HEADER,
+            CacheOverrideInterceptor.HEADER_KEY+":86400"})
     @GET("repos/{owner}/{repository}/pulls")
     Observable<List<PullRequest>> pullRequests(
             @Path("owner") String owner,
@@ -37,7 +40,8 @@ public interface GithubEndpoint {
     );
 
     @Headers({"UserShort-Agent: Github-Popular",
-            GithubAuthInterceptor.HEADER})
+            GithubAuthInterceptor.HEADER,
+            CacheOverrideInterceptor.HEADER_KEY+":86400"})
     @GET("users/{username}")
     Observable<User> user(@Path("username") String owner);
 }
