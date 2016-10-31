@@ -31,8 +31,9 @@ public class BooleanDeserializer implements JsonDeserializer<Boolean> {
     @Override
     public Boolean deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
-        String asString = json.getAsString().toLowerCase();
-        Boolean result = VALUE_MAP.get(asString);
+        String asString = json.getAsString();
+        if (asString == null) throw new JsonParseException(new NullPointerException());
+        Boolean result = VALUE_MAP.get(asString.toLowerCase());
         if (result == null)
             throw new JsonParseException(String.format("\"%s\" is not a valid boolean", asString));
         return result;
