@@ -12,6 +12,7 @@ import com.github.brunodles.utils.LogRx;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import rx.Observable;
@@ -79,6 +80,13 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RepositoryAdapter.Vi
     public void setList(List<Repository> list) {
         this.list.clear();
         addList(list);
+    }
+
+    /**
+     * @return a unmodifiable list of the items
+     */
+    public List<Repository> getList() {
+        return Collections.unmodifiableList(list);
     }
 
     public void setUserProvider(Func1<String, Observable<User>> provider) {

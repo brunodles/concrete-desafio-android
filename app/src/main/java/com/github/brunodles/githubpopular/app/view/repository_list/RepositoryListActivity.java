@@ -1,6 +1,7 @@
 package com.github.brunodles.githubpopular.app.view.repository_list;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 
 import com.github.brunodles.githubpopular.api.Api;
 import com.github.brunodles.githubpopular.api.GithubEndpoint;
+import com.github.brunodles.githubpopular.api.dto.Repository;
 import com.github.brunodles.githubpopular.app.BuildConfig;
 import com.github.brunodles.githubpopular.app.R;
 import com.github.brunodles.githubpopular.app.databinding.ActivityListRepositoryBinding;
@@ -19,6 +21,10 @@ import com.github.brunodles.recyclerview.VerticalSpaceItemDecoration;
 import com.github.brunodles.utils.LogRx;
 import com.trello.rxlifecycle.android.ActivityEvent;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
+import org.parceler.Parcels;
+
+import java.util.ArrayList;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,12 +40,15 @@ import static com.github.brunodles.utils.DimensionUtils.fromDp;
 public class RepositoryListActivity extends RxAppCompatActivity {
 
     private static final String TAG = "RepositoryListActivity";
+    public static final String STATE_LIST = "state_list";
+    public static final String STATE_LAST_PAGE = "lastPage";
 
     private NavigationDrawerLayoutBinding navigationDrawer;
     private ActivityListRepositoryBinding binding;
     private RepositoryAdapter repositoryAdapter;
     private CompositeSubscription subscriptions;
     private GithubEndpoint github;
+    private int lastPage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,7 +76,8 @@ public class RepositoryListActivity extends RxAppCompatActivity {
     private void setupToolbar(Toolbar toolbar) {
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         toolbar.setNavigationOnClickListener(v ->
-                navigationDrawer.navigationLayout.openDrawer(navigationDrawer.navigationItemsInclude.navigationItems)
+                navigationDrawer.navigationLayout.openDrawer(
+                        navigationDrawer.navigationItemsInclude.navigationItems)
         );
     }
 
@@ -97,7 +107,25 @@ public class RepositoryListActivity extends RxAppCompatActivity {
                 .compose(bindToLifecycle())
                 .map(e -> e.items)
                 .subscribe(repositoryAdapter::addList,
-                        LogRx.e(TAG, "onCreate: "));
+                        LogRx.e(TAG, "onCreate: "),
+                        () -> this.lastPage = page
+                );
         subscriptions.add(subscription);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        ArrayList<Repository> list = Parcels.unwrap(savedInstanceState.getParcelable(STATE_LIST));
+        repositoryAdapter.setList(list);
+        savedInstanceState.getInt(STATE_LAST_PAGE, 0);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Parcelable wrap = Parcels.wrap(new ArrayList<>(repositoryAdapter.getList()));
+        outState.putParcelable(STATE_LIST, wrap);
+        outState.putInt(STATE_LAST_PAGE, lastPage);
     }
 }
