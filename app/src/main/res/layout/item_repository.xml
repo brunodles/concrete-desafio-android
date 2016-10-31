@@ -70,10 +70,10 @@
                 android:layout_marginTop="8dp"
                 android:layout_toLeftOf="@+id/forks"
                 android:drawableLeft="@drawable/ic_star"
-                android:drawableTint="#e19b19"
+                android:drawableTint="@color/gold"
                 android:gravity="center"
                 android:text="@{String.valueOf(repository.stargazers_count)}"
-                android:textColor="#e19b19"
+                android:textColor="@color/gold"
                 tools:text="9000"/>
 
             <android.support.v7.widget.AppCompatTextView
@@ -87,10 +87,10 @@
                 android:layout_marginTop="8dp"
                 android:layout_toLeftOf="@+id/userFullname"
                 android:drawableLeft="@drawable/ic_fork"
-                android:drawableTint="#e19b19"
+                android:drawableTint="@color/gold"
                 android:gravity="center"
                 android:text="@{String.valueOf(repository.forks_count)}"
-                android:textColor="#e19b19"
+                android:textColor="@color/gold"
                 tools:text="9000"/>
 
             <android.support.v7.widget.AppCompatImageView
@@ -113,7 +113,7 @@
                 android:layout_alignBottom="@+id/userImage"
                 android:layout_alignLeft="@+id/userImage"
                 android:layout_alignRight="@+id/userImage"
-                android:background="#a000"
+                android:background="@color/black_alpha"
                 android:gravity="end"
                 android:paddingBottom="8dp"
                 android:paddingLeft="8dp"
@@ -129,13 +129,13 @@
                 android:layout_above="@+id/userFullname"
                 android:layout_alignLeft="@+id/userImage"
                 android:layout_alignRight="@+id/userImage"
-                android:background="#a000"
+                android:background="@color/black_alpha"
                 android:gravity="end"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
                 android:text="@{user.login}"
-                android:textColor="#ffff"
+                android:textColor="@android:color/white"
                 tools:text="brunodles"/>
 
             <android.support.v7.widget.AppCompatImageView
