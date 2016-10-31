@@ -15,8 +15,10 @@ import com.github.brunodles.githubpopular.app.databinding.ActivityListRepository
 import com.github.brunodles.recyclerview.EndlessRecyclerOnScrollListener;
 import com.github.brunodles.recyclerview.VerticalSpaceItemDecoration;
 import com.github.brunodles.utils.LogRx;
+import com.trello.rxlifecycle.android.ActivityEvent;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -50,6 +52,9 @@ public class RepositoryListActivity extends RxAppCompatActivity {
         setupRecyclerView(binding.recyclerView);
 
         repositoryAdapter.setUserProvider(github::user);
+
+        lifecycle().filter(event -> event == ActivityEvent.DESTROY)
+                .subscribe(e -> subscriptions.unsubscribe());
     }
 
     private void setupRecyclerView(RecyclerView recyclerView) {
@@ -66,6 +71,9 @@ public class RepositoryListActivity extends RxAppCompatActivity {
         EndlessRecyclerOnScrollListener scrollListener =
                 new EndlessRecyclerOnScrollListener(linearLayoutManager, this::loadPage);
         recyclerView.addOnScrollListener(scrollListener);
+
+        lifecycle().filter(event -> event == ActivityEvent.DESTROY)
+                .subscribe(e -> recyclerView.removeOnScrollListener(scrollListener));
     }
 
     private void loadPage(int page) {
