@@ -42,6 +42,13 @@
                 android:rotation="-10"
                 android:text="@string/myName"/>
 
+            <TextView
+                android:padding="8dp"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/about_text"/>
         </LinearLayout>
 
     </android.support.design.widget.NavigationView>

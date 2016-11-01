@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about">Sobre</string>
+    <string name="about_text">\t\tOlá!\nMeu nome é Bruno, eu sou um desenvolvedor android.
+        \n\t\tEu gostei muito de construir esse app, porque nele eu consegui usar algumas
+        bibliotécas e técnicas que só tinha lido sobre.\n\t\tDessa vez não deu pra usar Kotlin,
+        poderia ter me poupado um bocado de código, quem sabe na préxima vêz.</string>
+</resources>
