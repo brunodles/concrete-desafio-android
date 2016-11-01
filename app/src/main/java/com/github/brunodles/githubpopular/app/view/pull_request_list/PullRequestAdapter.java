@@ -1,12 +1,13 @@
-package com.github.brunodles.githubpopular.app.view.repository_list;
+package com.github.brunodles.githubpopular.app.view.pull_request_list;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.github.brunodles.adapter.RecyclerViewAdapter;
+import com.github.brunodles.githubpopular.api.dto.PullRequest;
 import com.github.brunodles.githubpopular.api.dto.Repository;
 import com.github.brunodles.githubpopular.api.dto.User;
-import com.github.brunodles.githubpopular.app.databinding.ItemRepositoryBinding;
+import com.github.brunodles.githubpopular.app.databinding.ItemPullRequestBinding;
 import com.github.brunodles.utils.LogRx;
 
 import rx.Observable;
@@ -19,31 +20,31 @@ import rx.functions.Func1;
  * Created by bruno on 30/10/16.
  */
 
-public class RepositoryAdapter extends RecyclerViewAdapter<Repository, RepositoryAdapter.ViewHolder> {
+public class PullRequestAdapter extends RecyclerViewAdapter<PullRequest, PullRequestAdapter.ViewHolder> {
 
     private static final String TAG = "RepositoryAdapter";
 
     private Func1<String, Observable<User>> provider;
-    private Action2<Integer, Repository> listener;
+    private Action2<Integer, PullRequest> listener;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(ItemRepositoryBinding.inflate(inflater(parent.getContext())));
+        return new ViewHolder(ItemPullRequestBinding.inflate(inflater(parent.getContext())));
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.cancelSubscription();
-        Repository repository = list.get(position);
+        PullRequest pullRequest = list.get(position);
         holder.binding.setUser(null);
-        holder.binding.setRepository(repository);
+        holder.binding.setPullRequest(pullRequest);
         if (provider != null) {
-            holder.subscription = provider.call(repository.owner.login)
+            holder.subscription = provider.call(pullRequest.user.login)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(holder.binding::setUser, LogRx.e(TAG, "onBindViewHolder: "));
         }
         if (listener != null)
-            holder.itemView.setOnClickListener(v -> listener.call(holder.getAdapterPosition(), repository));
+            holder.itemView.setOnClickListener(v -> listener.call(holder.getAdapterPosition(), pullRequest));
     }
 
     @Override
@@ -56,16 +57,16 @@ public class RepositoryAdapter extends RecyclerViewAdapter<Repository, Repositor
         this.provider = provider;
     }
 
-    public void setOnItemClickListener(Action2<Integer, Repository> listener) {
+    public void setOnItemClickListener(Action2<Integer, PullRequest> listener) {
         this.listener = listener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        final ItemRepositoryBinding binding;
+        final ItemPullRequestBinding binding;
         private Subscription subscription;
 
-        public ViewHolder(ItemRepositoryBinding binding) {
+        public ViewHolder(ItemPullRequestBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

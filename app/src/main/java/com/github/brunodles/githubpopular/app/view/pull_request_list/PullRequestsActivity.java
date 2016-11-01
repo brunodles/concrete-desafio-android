@@ -2,6 +2,7 @@ package com.github.brunodles.githubpopular.app.view.pull_request_list;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -11,14 +12,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 
 import com.github.brunodles.githubpopular.api.GithubEndpoint;
+import com.github.brunodles.githubpopular.api.dto.PullRequest;
 import com.github.brunodles.githubpopular.api.dto.Repository;
 import com.github.brunodles.githubpopular.app.R;
 import com.github.brunodles.githubpopular.app.application.GithubApplication;
 import com.github.brunodles.githubpopular.app.databinding.ActivityListPullRequestBinding;
 import com.github.brunodles.githubpopular.app.databinding.NavigationDrawerLayoutBinding;
-import com.github.brunodles.githubpopular.app.view.repository_list.RepositoryAdapter;
-import com.github.brunodles.githubpopular.app.view.ToolbarTipOffsetListener;
-import com.github.brunodles.recyclerview.EndlessRecyclerOnScrollListener;
+import com.github.brunodles.githubpopular.app.view.toolbar.ToolbarTipOffsetListener;
 import com.github.brunodles.recyclerview.VerticalSpaceItemDecoration;
 import com.github.brunodles.utils.LogRx;
 import com.trello.rxlifecycle.android.ActivityEvent;
@@ -46,7 +46,7 @@ public class PullRequestsActivity extends RxAppCompatActivity {
 
     private NavigationDrawerLayoutBinding navigationDrawer;
     private ActivityListPullRequestBinding binding;
-    private RepositoryAdapter repositoryAdapter;
+    private PullRequestAdapter adapter;
     private CompositeSubscription subscriptions;
     private GithubEndpoint github;
 
@@ -65,15 +65,24 @@ public class PullRequestsActivity extends RxAppCompatActivity {
         setContentView(navigationDrawer.getRoot());
 
         setupToolbar(binding.toolbar);
-        binding.appbar.addOnOffsetChangedListener(new ToolbarTipOffsetListener(binding.toolbar, binding.toolbarTip));
 
         subscriptions = new CompositeSubscription();
         github = GithubApplication.githubApi();
 
         Intent intent = getIntent();
         Repository repository = Parcels.unwrap(intent.getParcelableExtra(EXTRA_REPOSITORY));
+
         binding.setRepository(repository);
-//        setupRecyclerView(binding.recyclerView);
+
+        setupRecyclerView(binding.recyclerView);
+
+        Subscription subscription = github.pullRequests(repository.owner.login, repository.name)
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(bindToLifecycle())
+                .subscribe(adapter::addList,
+                        LogRx.e(TAG, "loadPage: failed to load pull requests"));
+        subscriptions.add(subscription);
+
 
         lifecycle().filter(event -> event == ActivityEvent.DESTROY)
                 .subscribe(e -> subscriptions.unsubscribe());
@@ -85,51 +94,38 @@ public class PullRequestsActivity extends RxAppCompatActivity {
     }
 
     private void setupRecyclerView(RecyclerView recyclerView) {
-        repositoryAdapter = new RepositoryAdapter();
+        adapter = new PullRequestAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
 
-        repositoryAdapter.setUserProvider(github::user);
-        repositoryAdapter.setOnItemClickListener(this::onItemClick);
+        adapter.setUserProvider(github::user);
+        adapter.setOnItemClickListener(this::onItemClick);
 
-        recyclerView.setAdapter(repositoryAdapter);
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(linearLayoutManager);
         VerticalSpaceItemDecoration itemDecoration = new VerticalSpaceItemDecoration(
                 (int) fromDp(getResources(), 4));
         recyclerView.addItemDecoration(itemDecoration);
-
-        EndlessRecyclerOnScrollListener scrollListener =
-                new EndlessRecyclerOnScrollListener(linearLayoutManager, this::loadPage);
-        recyclerView.addOnScrollListener(scrollListener);
-
-        lifecycle().filter(event -> event == ActivityEvent.DESTROY)
-                .subscribe(e -> recyclerView.removeOnScrollListener(scrollListener));
     }
 
-    private void onItemClick(Integer integer, Repository repository) {
-    }
+    private void onItemClick(Integer integer, PullRequest pullRequest) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(pullRequest.html_url));
+        startActivity(intent);
 
-    private void loadPage(int page) {
-        Subscription subscription = github.searchRepositories("language:Java", "star", page)
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(bindToLifecycle())
-                .map(e -> e.items)
-                .subscribe(repositoryAdapter::addList,
-                        LogRx.e(TAG, "loadPage: failed to load page " + page));
-        subscriptions.add(subscription);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        ArrayList<Repository> list = Parcels.unwrap(savedInstanceState.getParcelable(STATE_LIST));
-        repositoryAdapter.setList(list);
+        ArrayList<PullRequest> list = Parcels.unwrap(savedInstanceState.getParcelable(STATE_LIST));
+        adapter.setList(list);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Parcelable wrap = Parcels.wrap(new ArrayList<>(repositoryAdapter.getList()));
+        Parcelable wrap = Parcels.wrap(new ArrayList<>(adapter.getList()));
         outState.putParcelable(STATE_LIST, wrap);
     }
 }

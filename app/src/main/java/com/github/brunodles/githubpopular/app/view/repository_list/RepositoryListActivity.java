@@ -15,8 +15,8 @@ import com.github.brunodles.githubpopular.app.R;
 import com.github.brunodles.githubpopular.app.application.GithubApplication;
 import com.github.brunodles.githubpopular.app.databinding.ActivityListRepositoryBinding;
 import com.github.brunodles.githubpopular.app.databinding.NavigationDrawerLayoutBinding;
-import com.github.brunodles.githubpopular.app.view.ToolbarTipOffsetListener;
 import com.github.brunodles.githubpopular.app.view.pull_request_list.PullRequestsActivity;
+import com.github.brunodles.githubpopular.app.view.toolbar.ToolbarTipOffsetListener;
 import com.github.brunodles.recyclerview.EndlessRecyclerOnScrollListener;
 import com.github.brunodles.recyclerview.VerticalSpaceItemDecoration;
 import com.github.brunodles.utils.LogRx;
@@ -58,7 +58,7 @@ public class RepositoryListActivity extends RxAppCompatActivity {
         setContentView(navigationDrawer.getRoot());
 
         setupToolbar(binding.toolbar);
-        binding.appbar.addOnOffsetChangedListener(new ToolbarTipOffsetListener(binding.toolbar, binding.toolbarTip));
+        binding.appbar.addOnOffsetChangedListener(ToolbarTipOffsetListener.color(binding.toolbar, binding.toolbarTip));
 
         subscriptions = new CompositeSubscription();
         github = GithubApplication.githubApi();

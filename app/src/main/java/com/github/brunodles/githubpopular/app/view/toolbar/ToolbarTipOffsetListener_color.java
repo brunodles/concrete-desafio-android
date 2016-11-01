@@ -1,4 +1,4 @@
-package com.github.brunodles.githubpopular.app.view;
+package com.github.brunodles.githubpopular.app.view.toolbar;
 
 import android.animation.Animator;
 import android.animation.ArgbEvaluator;
@@ -7,31 +7,28 @@ import android.content.Context;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.ImageView;
-
-import com.github.brunodles.githubpopular.app.R;
 
 /**
  * Created by bruno on 31/10/16.
  */
-public class ToolbarTipOffsetListener implements AppBarLayout.OnOffsetChangedListener, Animator.AnimatorListener {
+class ToolbarTipOffsetListener_color implements ToolbarTipOffsetListener {
 
     private final Toolbar toolbar;
     private final ImageView toolbarTip;
-    private final int primary;
-    private final int primaryDark;
+    private final int initialColor;
+    private final int collapsedColor;
     private boolean isAnimating = false;
     private int lastVerticalOffset;
     private int lastColor;
 
-    public ToolbarTipOffsetListener(Toolbar toolbar, ImageView toolbarTip) {
+    ToolbarTipOffsetListener_color(Toolbar toolbar, ImageView toolbarTip, int initialColor, int collapsedColor) {
         this.toolbar = toolbar;
         this.toolbarTip = toolbarTip;
         Context context = toolbar.getContext();
-        primary = ContextCompat.getColor(context, R.color.colorPrimary);
-        primaryDark = ContextCompat.getColor(context, R.color.colorPrimaryDark);
-        lastColor = primary;
+        this.initialColor = ContextCompat.getColor(context, initialColor);
+        this.collapsedColor = ContextCompat.getColor(context, collapsedColor);
+        lastColor = this.initialColor;
     }
 
     @Override
@@ -48,8 +45,8 @@ public class ToolbarTipOffsetListener implements AppBarLayout.OnOffsetChangedLis
 
     private int colorFor(int verticalOffset) {
         return shouldShowDarkColor(verticalOffset)
-                ? primaryDark
-                : primary;
+                ? collapsedColor
+                : initialColor;
     }
 
     private void animateFor(int nextColor) {
