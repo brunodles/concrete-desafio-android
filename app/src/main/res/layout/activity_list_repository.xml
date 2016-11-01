@@ -38,20 +38,14 @@
                 app:title="@string/app_name"
                 />
 
-            <!--<android.support.v4.widget.NestedScrollView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:fillViewport="true"-->
-                <!--app:layout_scrollFlags="scroll|enterAlways">-->
 
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/toolbarTip"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitXY"
-                    android:tint="@color/colorPrimary"
-                    app:srcCompat="@drawable/toolbar_tip"/>
-            <!--</android.support.v4.widget.NestedScrollView>-->
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/toolbarTip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:tint="@color/colorPrimary"
+                app:srcCompat="@drawable/toolbar_tip"/>
 
         </android.support.design.widget.AppBarLayout>
 
