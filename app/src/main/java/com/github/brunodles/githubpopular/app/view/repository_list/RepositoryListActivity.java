@@ -6,10 +6,9 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
+import android.support.v4.os.TraceCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 
 import com.github.brunodles.githubpopular.api.GithubEndpoint;
@@ -31,10 +30,12 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
+import hugo.weaving.DebugLog;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.github.brunodles.githubpopular.app.application.GithubApplication.githubApi;
 import static com.github.brunodles.utils.DimensionUtils.fromDp;
 
 
@@ -51,21 +52,21 @@ public class RepositoryListActivity extends RxAppCompatActivity {
     private ActivityListRepositoryBinding binding;
     private RepositoryAdapter repositoryAdapter;
     private CompositeSubscription subscriptions;
-    private GithubEndpoint github;
+    private LinearLayoutManager linearLayoutManager;
 
+    @DebugLog
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         LayoutInflater layoutInflater = getLayoutInflater();
         navigationDrawer = NavigationDrawerLayoutBinding.inflate(layoutInflater);
         binding = ActivityListRepositoryBinding.inflate(layoutInflater, navigationDrawer.navigationContainer, true);
         setContentView(navigationDrawer.getRoot());
 
-        setupToolbar(binding.toolbar);
-        binding.appbar.addOnOffsetChangedListener(ToolbarTipOffsetListener.color(binding.toolbar, binding.toolbarTip));
+        binding.toolbar.setNavigationIcon(R.drawable.ic_menu);
 
         subscriptions = new CompositeSubscription();
-        github = GithubApplication.githubApi();
 
         setupRecyclerView(binding.recyclerView);
 
@@ -73,34 +74,17 @@ public class RepositoryListActivity extends RxAppCompatActivity {
                 .subscribe(e -> subscriptions.unsubscribe());
     }
 
-    private void setupToolbar(Toolbar toolbar) {
-        toolbar.setNavigationIcon(R.drawable.ic_menu);
-        toolbar.setNavigationOnClickListener(v ->
-                navigationDrawer.navigationLayout.openDrawer(
-                        navigationDrawer.navigationItemsInclude.navigationItems)
-        );
-    }
-
+    @DebugLog
     private void setupRecyclerView(RecyclerView recyclerView) {
         repositoryAdapter = new RepositoryAdapter();
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
+        linearLayoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
-
-        repositoryAdapter.setUserProvider(github::user);
-        repositoryAdapter.setOnItemClickListener(this::onItemClick);
 
         recyclerView.setAdapter(repositoryAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);
         VerticalSpaceItemDecoration itemDecoration = new VerticalSpaceItemDecoration(
                 (int) fromDp(getResources(), 4));
         recyclerView.addItemDecoration(itemDecoration);
-
-        EndlessRecyclerOnScrollListener scrollListener =
-                new EndlessRecyclerOnScrollListener(linearLayoutManager, this::loadPage);
-        recyclerView.addOnScrollListener(scrollListener);
-
-        lifecycle().filter(event -> event == ActivityEvent.DESTROY)
-                .subscribe(e -> recyclerView.removeOnScrollListener(scrollListener));
     }
 
     private void onItemClick(ItemRepositoryBinding binding, Repository repository) {
@@ -111,7 +95,7 @@ public class RepositoryListActivity extends RxAppCompatActivity {
     }
 
     private void loadPage(int page) {
-        Subscription subscription = github.searchRepositories("language:Java", "star", page)
+        Subscription subscription = githubApi().searchRepositories("language:Java", "star", page)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(bindToLifecycle())
                 .map(e -> e.items)
@@ -120,6 +104,29 @@ public class RepositoryListActivity extends RxAppCompatActivity {
         subscriptions.add(subscription);
     }
 
+    @DebugLog
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        binding.appbar.addOnOffsetChangedListener(ToolbarTipOffsetListener.color(binding.toolbar, binding.toolbarTip));
+        repositoryAdapter.setUserProvider(githubApi()::user);
+        repositoryAdapter.setOnItemClickListener(this::onItemClick);
+
+        EndlessRecyclerOnScrollListener scrollListener =
+                new EndlessRecyclerOnScrollListener(linearLayoutManager, this::loadPage);
+        binding.recyclerView.addOnScrollListener(scrollListener);
+
+        lifecycle().filter(event -> event == ActivityEvent.PAUSE)
+                .subscribe(e -> binding.recyclerView.removeOnScrollListener(scrollListener));
+
+        binding.toolbar.setNavigationOnClickListener(v ->
+                navigationDrawer.navigationLayout.openDrawer(
+                        navigationDrawer.navigationItemsInclude.navigationItems)
+        );
+    }
+
+    @DebugLog
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -127,6 +134,7 @@ public class RepositoryListActivity extends RxAppCompatActivity {
         repositoryAdapter.setList(list);
     }
 
+    @DebugLog
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

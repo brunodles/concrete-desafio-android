@@ -9,6 +9,8 @@ import com.squareup.leakcanary.LeakCanary;
 
 import java.lang.ref.WeakReference;
 
+import hugo.weaving.DebugLog;
+
 /**
  * Created by bruno on 29/10/16.
  */
@@ -18,6 +20,7 @@ public class GithubApplication extends Application {
     private static WeakReference<Application> application;
     private static WeakReference<GithubEndpoint> github;
 
+    @DebugLog
     @Override
     public void onCreate() {
         super.onCreate();
@@ -32,6 +35,7 @@ public class GithubApplication extends Application {
         application = new WeakReference<>(this);
     }
 
+    @DebugLog
     public static GithubEndpoint githubApi() {
         GithubEndpoint result;
         if (github == null || (result = github.get()) == null) {

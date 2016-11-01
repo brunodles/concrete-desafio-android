@@ -8,6 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/octocat_background</item>
+    </style>
+
     <style name="toolbar_root" tools:ignore="NewApi">
         <item name="android:contentInsetLeft">0dp</item>
         <item name="android:contentInsetStart">0dp</item>
