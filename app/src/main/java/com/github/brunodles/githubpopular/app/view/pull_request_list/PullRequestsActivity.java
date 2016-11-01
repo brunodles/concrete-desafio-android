@@ -89,7 +89,7 @@ public class PullRequestsActivity extends RxAppCompatActivity {
     }
 
     private void setupToolbar(Toolbar toolbar) {
-        toolbar.setNavigationIcon(R.drawable.ic_menu);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setNavigationOnClickListener(v -> finish());
     }
 
