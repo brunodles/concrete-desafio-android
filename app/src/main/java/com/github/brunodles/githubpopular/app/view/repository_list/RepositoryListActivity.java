@@ -1,14 +1,16 @@
 package com.github.brunodles.githubpopular.app.view.repository_list;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.widget.Toast;
 
 import com.github.brunodles.githubpopular.api.Api;
 import com.github.brunodles.githubpopular.api.GithubEndpoint;
@@ -59,8 +61,9 @@ public class RepositoryListActivity extends RxAppCompatActivity {
         binding = ActivityListRepositoryBinding.inflate(layoutInflater, navigationDrawer.navigationContainer, true);
         setContentView(navigationDrawer.getRoot());
 
-        setupToolbar(binding.toolbarInclude.toolbar);
-        binding.toolbarInclude.toolbar.setTitle("Java Pop");
+//        setupToolbar(binding.toolbarInclude.sample_toolbar);
+        setupToolbar(binding.toolbar);
+        binding.appbar.addOnOffsetChangedListener(new ToolbarTipOffsetListener(binding.toolbar, binding.toolbarTip));
 
         subscriptions = new CompositeSubscription();
         github = new Api(BuildConfig.API_URL, getCacheDir(), () -> BuildConfig.API_CLIENT_ID,
@@ -73,6 +76,7 @@ public class RepositoryListActivity extends RxAppCompatActivity {
     }
 
     private void setupToolbar(Toolbar toolbar) {
+        toolbar.setTitle("Java Pop");
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         toolbar.setNavigationOnClickListener(v ->
                 navigationDrawer.navigationLayout.openDrawer(

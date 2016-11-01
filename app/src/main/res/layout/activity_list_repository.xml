@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
     <data>
@@ -15,23 +15,43 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:layout_marginTop="-10dp"
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="-8dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:ignore="NegativeMargin"/>
 
         <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             app:elevation="0dp">
 
-            <include
-                android:id="@+id/toolbarInclude"
-                layout="@layout/toolbar"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:title="@string/app_name"
+                />
+
+            <!--<android.support.v4.widget.NestedScrollView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:fillViewport="true"-->
+                <!--app:layout_scrollFlags="scroll|enterAlways">-->
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/toolbarTip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:tint="@color/colorPrimary"
+                    app:srcCompat="@drawable/toolbar_tip"/>
+            <!--</android.support.v4.widget.NestedScrollView>-->
 
         </android.support.design.widget.AppBarLayout>
 
