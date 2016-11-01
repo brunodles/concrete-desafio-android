@@ -104,6 +104,7 @@
                 android:scaleType="centerCrop"
                 android:src="@{repository.owner.avatar_url}"
                 app:placeHolder="@{R.drawable.ic_person}"
+                android:transitionName="userImage"
                 tools:src="@drawable/about_photo"/>
 
             <TextView

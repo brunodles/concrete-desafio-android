@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +17,7 @@ import com.github.brunodles.githubpopular.api.dto.Repository;
 import com.github.brunodles.githubpopular.app.R;
 import com.github.brunodles.githubpopular.app.application.GithubApplication;
 import com.github.brunodles.githubpopular.app.databinding.ActivityListRepositoryBinding;
+import com.github.brunodles.githubpopular.app.databinding.ItemRepositoryBinding;
 import com.github.brunodles.githubpopular.app.databinding.NavigationDrawerLayoutBinding;
 import com.github.brunodles.githubpopular.app.view.pull_request_list.PullRequestsActivity;
 import com.github.brunodles.githubpopular.app.view.toolbar.ToolbarTipOffsetListener;
@@ -99,9 +103,11 @@ public class RepositoryListActivity extends RxAppCompatActivity {
                 .subscribe(e -> recyclerView.removeOnScrollListener(scrollListener));
     }
 
-    private void onItemClick(Integer integer, Repository repository) {
+    private void onItemClick(ItemRepositoryBinding binding, Repository repository) {
         Intent intent = PullRequestsActivity.newIntent(this, repository);
-        startActivity(intent);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                binding.userImage, "userImage");
+        ActivityCompat.startActivity(this, intent, options.toBundle());
     }
 
     private void loadPage(int page) {

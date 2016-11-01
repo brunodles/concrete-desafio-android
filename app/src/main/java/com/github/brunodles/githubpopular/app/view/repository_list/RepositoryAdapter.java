@@ -24,7 +24,7 @@ public class RepositoryAdapter extends RecyclerViewAdapter<Repository, Repositor
     private static final String TAG = "RepositoryAdapter";
 
     private Func1<String, Observable<User>> provider;
-    private Action2<Integer, Repository> listener;
+    private Action2<ItemRepositoryBinding, Repository> listener;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -43,7 +43,7 @@ public class RepositoryAdapter extends RecyclerViewAdapter<Repository, Repositor
                     .subscribe(holder.binding::setUser, LogRx.e(TAG, "onBindViewHolder: "));
         }
         if (listener != null)
-            holder.itemView.setOnClickListener(v -> listener.call(holder.getAdapterPosition(), repository));
+            holder.itemView.setOnClickListener(v -> listener.call(holder.binding, repository));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class RepositoryAdapter extends RecyclerViewAdapter<Repository, Repositor
         this.provider = provider;
     }
 
-    public void setOnItemClickListener(Action2<Integer, Repository> listener) {
+    public void setOnItemClickListener(Action2<ItemRepositoryBinding, Repository> listener) {
         this.listener = listener;
     }
 
