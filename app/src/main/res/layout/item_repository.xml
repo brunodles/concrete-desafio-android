@@ -103,8 +103,8 @@
                 android:layout_alignParentTop="true"
                 android:scaleType="centerCrop"
                 android:src="@{repository.owner.avatar_url}"
-                app:placeHolder="@{R.drawable.ic_person}"
                 android:transitionName="userImage"
+                app:placeHolder="@{R.drawable.ic_person}"
                 tools:src="@drawable/about_photo"/>
 
             <TextView
@@ -130,13 +130,14 @@
                 android:layout_above="@+id/userFullname"
                 android:layout_alignLeft="@+id/userImage"
                 android:layout_alignRight="@+id/userImage"
-                android:background="@color/black_alpha"
                 android:gravity="end"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
                 android:text="@{user.login}"
                 android:textColor="@android:color/white"
+                app:backgroundCompat="@{R.drawable.back_username}"
+                tools:background="@drawable/back_username"
                 tools:text="brunodles"/>
 
             <android.support.v7.widget.AppCompatImageView
