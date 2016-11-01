@@ -6,4 +6,6 @@
         enjoyed to build this app, because I used some libs and technics I just read about.\n\t\t
         This time Kotlin passed away, but we can save a lot of code using it, maybe on next
         project.</string>
+
+    <string name="leak_canary_display_activity_label">GihubPopular leaks</string>
 </resources>
