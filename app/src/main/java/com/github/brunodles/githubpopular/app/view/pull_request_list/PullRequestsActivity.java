@@ -1,5 +1,6 @@
-package com.github.brunodles.githubpopular.app.view.repository_list;
+package com.github.brunodles.githubpopular.app.view.pull_request_list;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -13,10 +14,10 @@ import com.github.brunodles.githubpopular.api.GithubEndpoint;
 import com.github.brunodles.githubpopular.api.dto.Repository;
 import com.github.brunodles.githubpopular.app.R;
 import com.github.brunodles.githubpopular.app.application.GithubApplication;
-import com.github.brunodles.githubpopular.app.databinding.ActivityListRepositoryBinding;
+import com.github.brunodles.githubpopular.app.databinding.ActivityListPullRequestBinding;
 import com.github.brunodles.githubpopular.app.databinding.NavigationDrawerLayoutBinding;
+import com.github.brunodles.githubpopular.app.view.repository_list.RepositoryAdapter;
 import com.github.brunodles.githubpopular.app.view.ToolbarTipOffsetListener;
-import com.github.brunodles.githubpopular.app.view.pull_request_list.PullRequestsActivity;
 import com.github.brunodles.recyclerview.EndlessRecyclerOnScrollListener;
 import com.github.brunodles.recyclerview.VerticalSpaceItemDecoration;
 import com.github.brunodles.utils.LogRx;
@@ -33,28 +34,34 @@ import rx.subscriptions.CompositeSubscription;
 
 import static com.github.brunodles.utils.DimensionUtils.fromDp;
 
-
 /**
- * Created by bruno on 29/10/16.
+ * Created by bruno on 31/10/16.
  */
 
-public class RepositoryListActivity extends RxAppCompatActivity {
+public class PullRequestsActivity extends RxAppCompatActivity {
 
-    private static final String TAG = "RepositoryListActivity";
+    private static final String TAG = "PullRequestsActivity";
     public static final String STATE_LIST = "state_list";
+    public static final String EXTRA_REPOSITORY = "EXTRA_REPOSITORY";
 
     private NavigationDrawerLayoutBinding navigationDrawer;
-    private ActivityListRepositoryBinding binding;
+    private ActivityListPullRequestBinding binding;
     private RepositoryAdapter repositoryAdapter;
     private CompositeSubscription subscriptions;
     private GithubEndpoint github;
+
+    public static Intent newIntent(Context context, Repository repository) {
+        Intent intent = new Intent(context, PullRequestsActivity.class);
+        intent.putExtra(EXTRA_REPOSITORY, Parcels.wrap(repository));
+        return intent;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LayoutInflater layoutInflater = getLayoutInflater();
         navigationDrawer = NavigationDrawerLayoutBinding.inflate(layoutInflater);
-        binding = ActivityListRepositoryBinding.inflate(layoutInflater, navigationDrawer.navigationContainer, true);
+        binding = ActivityListPullRequestBinding.inflate(layoutInflater, navigationDrawer.navigationContainer, true);
         setContentView(navigationDrawer.getRoot());
 
         setupToolbar(binding.toolbar);
@@ -63,7 +70,10 @@ public class RepositoryListActivity extends RxAppCompatActivity {
         subscriptions = new CompositeSubscription();
         github = GithubApplication.githubApi();
 
-        setupRecyclerView(binding.recyclerView);
+        Intent intent = getIntent();
+        Repository repository = Parcels.unwrap(intent.getParcelableExtra(EXTRA_REPOSITORY));
+        binding.setRepository(repository);
+//        setupRecyclerView(binding.recyclerView);
 
         lifecycle().filter(event -> event == ActivityEvent.DESTROY)
                 .subscribe(e -> subscriptions.unsubscribe());
@@ -71,10 +81,7 @@ public class RepositoryListActivity extends RxAppCompatActivity {
 
     private void setupToolbar(Toolbar toolbar) {
         toolbar.setNavigationIcon(R.drawable.ic_menu);
-        toolbar.setNavigationOnClickListener(v ->
-                navigationDrawer.navigationLayout.openDrawer(
-                        navigationDrawer.navigationItemsInclude.navigationItems)
-        );
+        toolbar.setNavigationOnClickListener(v -> finish());
     }
 
     private void setupRecyclerView(RecyclerView recyclerView) {
@@ -100,8 +107,6 @@ public class RepositoryListActivity extends RxAppCompatActivity {
     }
 
     private void onItemClick(Integer integer, Repository repository) {
-        Intent intent = PullRequestsActivity.newIntent(this, repository);
-        startActivity(intent);
     }
 
     private void loadPage(int page) {

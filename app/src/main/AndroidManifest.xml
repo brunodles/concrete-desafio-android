@@ -19,6 +19,8 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".view.pull_request_list.PullRequestsActivity"/>
     </application>
 
 </manifest>

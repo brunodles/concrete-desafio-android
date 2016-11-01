@@ -2,7 +2,12 @@ package com.github.brunodles.githubpopular.app.application;
 
 import android.app.Application;
 
+import com.github.brunodles.githubpopular.api.Api;
+import com.github.brunodles.githubpopular.api.GithubEndpoint;
+import com.github.brunodles.githubpopular.app.BuildConfig;
 import com.squareup.leakcanary.LeakCanary;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by bruno on 29/10/16.
@@ -10,7 +15,11 @@ import com.squareup.leakcanary.LeakCanary;
 
 public class GithubApplication extends Application {
 
-    @Override public void onCreate() {
+    private static WeakReference<Application> application;
+    private static WeakReference<GithubEndpoint> github;
+
+    @Override
+    public void onCreate() {
         super.onCreate();
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
@@ -20,5 +29,17 @@ public class GithubApplication extends Application {
         ApplicationMods.apply(this);
         LeakCanary.install(this);
         // Normal app init code...
+        application = new WeakReference<>(this);
+    }
+
+    public static GithubEndpoint githubApi() {
+        GithubEndpoint result;
+        if (github == null || (result = github.get()) == null) {
+            result = new Api(BuildConfig.API_URL, application.get().getCacheDir(),
+                    () -> BuildConfig.API_CLIENT_ID,
+                    () -> BuildConfig.API_CLIENT_SECRET).github();
+            github = new WeakReference<>(result);
+        }
+        return result;
     }
 }

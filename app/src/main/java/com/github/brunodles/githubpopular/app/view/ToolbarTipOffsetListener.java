@@ -1,4 +1,4 @@
-package com.github.brunodles.githubpopular.app.view.repository_list;
+package com.github.brunodles.githubpopular.app.view;
 
 import android.animation.Animator;
 import android.animation.ArgbEvaluator;
@@ -16,7 +16,6 @@ import com.github.brunodles.githubpopular.app.R;
  * Created by bruno on 31/10/16.
  */
 public class ToolbarTipOffsetListener implements AppBarLayout.OnOffsetChangedListener, Animator.AnimatorListener {
-    private static final String TAG = "ToolbarTipOffsetListene";
 
     private final Toolbar toolbar;
     private final ImageView toolbarTip;
@@ -39,7 +38,6 @@ public class ToolbarTipOffsetListener implements AppBarLayout.OnOffsetChangedLis
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
         lastVerticalOffset = verticalOffset;
         if (isAnimating) return;
-        Log.d(TAG, "addOnOffsetChangedListener: " + verticalOffset);
         checkColor(verticalOffset);
     }
 
