@@ -55,9 +55,7 @@
                 app:expandedTitleMarginStart="48dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:title="@{repository.full_name}"
-                app:titleEnabled="false">
-                <!--Don't enable title at collapsing toolbar, at least for now-->
-                <!--http://stackoverflow.com/a/32906885/1622925-->
+                app:titleEnabled="true">
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/userImage"
