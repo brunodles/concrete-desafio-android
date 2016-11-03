@@ -7,6 +7,8 @@
 
         <import type="com.github.brunodles.githubpopular.app.R"/>
 
+        <import type="android.view.ViewGroup.LayoutParams"/>
+
         <variable
             name="pullRequest"
             type="com.github.brunodles.githubpopular.api.dto.PullRequest"/>
@@ -69,6 +71,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:layerType="hardware"
                 android:scaleType="centerCrop"
                 android:src="@{pullRequest.user.avatar_url}"
                 app:placeHolder="@{R.drawable.ic_person}"
@@ -87,7 +90,10 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:text="@{user.name}"
-                tools:text="Bruno de Lima"/>
+                app:defaultHeight="@{LayoutParams.WRAP_CONTENT}"
+                app:noHeightIf="@{user.name == null}"
+                tools:text="Bruno de Lima"
+                />
 
             <TextView
                 android:id="@+id/userLogin"
@@ -98,6 +104,7 @@
                 android:layout_alignLeft="@+id/userImage"
                 android:layout_alignRight="@+id/userImage"
                 android:gravity="end"
+                android:layerType="hardware"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
@@ -114,6 +121,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentTop="true"
                 android:layout_alignRight="@+id/userImage"
+                android:layerType="hardware"
                 android:rotation="180"
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/overdraw_user_image"/>

@@ -1,0 +1,19 @@
+android.applicationVariants.all { variant ->
+    task("cleanAppData${variant.name.capitalize()}") {
+        description "Clean app data on device"
+        group 'install'
+        doLast {
+            "adb shell pm clear ${variant.applicationId}".execute()
+        }
+    }
+}
+
+task cleanAppData {
+    description "Clean app data on device"
+    group 'install'
+    doLast {
+        android.applicationVariants.all { variant ->
+            "adb shell pm clear ${variant.applicationId}".execute()
+        }
+    }
+}

@@ -7,6 +7,8 @@
 
         <import type="com.github.brunodles.githubpopular.app.R"/>
 
+        <import type="android.view.ViewGroup.LayoutParams"/>
+
         <variable
             name="repository"
             type="com.github.brunodles.githubpopular.api.dto.Repository"/>
@@ -101,6 +103,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
+                android:layerType="hardware"
                 android:scaleType="centerCrop"
                 android:src="@{repository.owner.avatar_url}"
                 android:transitionName="userImage"
@@ -116,10 +119,13 @@
                 android:layout_alignRight="@+id/userImage"
                 android:background="@color/black_alpha"
                 android:gravity="end"
+                android:layerType="hardware"
                 android:paddingBottom="8dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:text="@{user.name}"
+                app:defaultHeight="@{LayoutParams.WRAP_CONTENT}"
+                app:noHeightIf="@{user.name == null}"
                 tools:text="Bruno de Lima"/>
 
             <TextView
@@ -131,6 +137,7 @@
                 android:layout_alignLeft="@+id/userImage"
                 android:layout_alignRight="@+id/userImage"
                 android:gravity="end"
+                android:layerType="hardware"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
@@ -147,6 +154,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentTop="true"
                 android:layout_alignStart="@+id/userImage"
+                android:layerType="hardware"
                 android:scaleType="fitXY"
                 app:srcCompat="@drawable/overdraw_user_image"/>
 

@@ -1,1 +1,1 @@
-java -jar wiremock.jar --verbose --port=3000
+java -jar wiremock.jar --root-dir z_old --verbose --port=3000

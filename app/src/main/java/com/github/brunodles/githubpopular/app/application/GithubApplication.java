@@ -1,15 +1,20 @@
 package com.github.brunodles.githubpopular.app.application;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.github.brunodles.githubpopular.api.Api;
 import com.github.brunodles.githubpopular.api.GithubEndpoint;
 import com.github.brunodles.githubpopular.app.BuildConfig;
+import com.github.brunodles.githubpopular.app.data.AppDataOpenHelper;
 import com.squareup.leakcanary.LeakCanary;
+import com.squareup.sqlbrite.BriteDatabase;
+import com.squareup.sqlbrite.SqlBrite;
 
 import java.lang.ref.WeakReference;
 
 import hugo.weaving.DebugLog;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by bruno on 29/10/16.
@@ -19,6 +24,7 @@ public class GithubApplication extends Application {
 
     private static WeakReference<Application> application;
     private static WeakReference<GithubEndpoint> github;
+    private static WeakReference<BriteDatabase> database;
 
     @DebugLog
     @Override
@@ -42,7 +48,21 @@ public class GithubApplication extends Application {
             result = new Api(BuildConfig.API_URL, application.get().getCacheDir(),
                     () -> BuildConfig.API_CLIENT_ID,
                     () -> BuildConfig.API_CLIENT_SECRET).github();
+            result = new MixedRepository(result, database());
             github = new WeakReference<>(result);
+        }
+        return result;
+    }
+
+    @DebugLog
+    public static BriteDatabase database() {
+        BriteDatabase result;
+        if (database == null || (result = database.get()) == null) {
+            AppDataOpenHelper appDataOpenHelper = new AppDataOpenHelper(application.get());
+            SqlBrite sqlBrite = SqlBrite.create(message -> Log.d("Database", message));
+            result = sqlBrite.wrapDatabaseHelper(appDataOpenHelper,
+                    Schedulers.io());
+            database = new WeakReference<>(result);
         }
         return result;
     }

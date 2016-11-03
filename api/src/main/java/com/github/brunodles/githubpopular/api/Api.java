@@ -26,7 +26,7 @@ public class Api {
     public Api(String baseUrl, File cacheDir, Func0<String> clientIdProvider,
                Func0<String> clientSecretProvider) {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         File httpCacheDirectory = new File(cacheDir, "responses");
         int cacheSize = 10 * 1024 * 1024; // 10 MiB
