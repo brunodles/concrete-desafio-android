@@ -23,7 +23,7 @@ import rx.schedulers.Schedulers;
 public class GithubApplication extends Application {
 
     private static WeakReference<Application> application;
-    private static WeakReference<GithubEndpoint> github;
+    static WeakReference<GithubEndpoint> github;
     private static WeakReference<BriteDatabase> database;
 
     @DebugLog
