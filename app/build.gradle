@@ -15,8 +15,8 @@ retrolambda {
 android {
     compileSdkVersion 25
     buildToolsVersion "25"
-    publishNonDefault true
-    testBuildType "release"
+//    publishNonDefault true
+//    testBuildType "release"
     dataBinding {
         enabled = true
     }

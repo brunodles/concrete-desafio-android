@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name" translatable="false">GithubPopular</string>
-    <string name="myName" translatable="false">Bruno de Lima</string>
-    <string name="about">About</string>
-    <string name="about_text">\t\tHi!\nMy name is Bruno, I\'m a android developer.\n\t\tI really
-        enjoyed to build this app, because I used some libs and technics I just read about.\n\t\t
-        This time Kotlin passed away, but we can save a lot of code using it, maybe on next
+    <string name="about_name" translatable="false">Bruno de Lima</string>
+    <string name="about_text">About</string>
+    <string name="about_description">\t\tHi!\nMy name is Bruno, I\'m a android developer.\n\t\t
+        I really enjoyed to build this app, because I used some libs and technics I just read about.
+        \n\t\t This time Kotlin passed away, but we can save a lot of code using it, maybe on next
         project.</string>
 
     <string name="leak_canary_display_activity_label">GihubPopular leaks</string>

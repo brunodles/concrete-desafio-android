@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="about">About</string>
-    <string name="about_text">\t\tHi!\nMy name is Bruno, I\'m a android developer.\n\t\t
+    <string name="about_text">About</string>
+    <string name="about_description">\t\tHi!\nMy name is Bruno, I\'m a android developer.\n\t\t
         I really enjoyed to build this app, because I used some libs and technics I just read about.
         \n\t\t This time Kotlin passed away, but we can save a lot of code using it, maybe on next
         project.</string>
