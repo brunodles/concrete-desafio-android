@@ -96,7 +96,7 @@ public class RepositoryListActivity extends RxAppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        repositoryAdapter.setUserProvider(this::getUser);
+        repositoryAdapter.setUserProvider(user -> githubApi().user(user).compose(bindToLifecycle()));
         scrollListener.loadFirstIfNeeded();
     }
 
@@ -130,11 +130,6 @@ public class RepositoryListActivity extends RxAppCompatActivity {
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
                 binding.userImage, "userImage");
         ActivityCompat.startActivity(this, intent, options.toBundle());
-    }
-
-    private Observable<User> getUser(String s) {
-        return githubApi().user(s)
-                .compose(bindToLifecycle());
     }
 
     @DebugLog

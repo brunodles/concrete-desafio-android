@@ -11,11 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 
-import com.github.brunodles.githubpopular.api.GithubEndpoint;
 import com.github.brunodles.githubpopular.api.dto.PullRequest;
 import com.github.brunodles.githubpopular.api.dto.Repository;
 import com.github.brunodles.githubpopular.app.R;
-import com.github.brunodles.githubpopular.app.application.GithubApplication;
 import com.github.brunodles.githubpopular.app.databinding.ActivityListPullRequestBinding;
 import com.github.brunodles.githubpopular.app.databinding.NavigationDrawerLayoutBinding;
 import com.github.brunodles.recyclerview.VerticalSpaceItemDecoration;
@@ -31,6 +29,7 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.github.brunodles.githubpopular.app.application.GithubApplication.githubApi;
 import static com.github.brunodles.utils.DimensionUtils.fromDp;
 
 /**
@@ -47,7 +46,6 @@ public class PullRequestsActivity extends RxAppCompatActivity {
     private ActivityListPullRequestBinding binding;
     private PullRequestAdapter adapter;
     private CompositeSubscription subscriptions;
-    private GithubEndpoint github;
 
     public static Intent newIntent(Context context, Repository repository) {
         Intent intent = new Intent(context, PullRequestsActivity.class);
@@ -66,7 +64,6 @@ public class PullRequestsActivity extends RxAppCompatActivity {
         setupToolbar(binding.toolbar);
 
         subscriptions = new CompositeSubscription();
-        github = GithubApplication.githubApi();
 
         Intent intent = getIntent();
         Repository repository = Parcels.unwrap(intent.getParcelableExtra(EXTRA_REPOSITORY));
@@ -75,7 +72,7 @@ public class PullRequestsActivity extends RxAppCompatActivity {
 
         setupRecyclerView(binding.recyclerView);
 
-        Subscription subscription = github.pullRequests(repository.owner.login, repository.name)
+        Subscription subscription = githubApi().pullRequests(repository.owner.login, repository.name)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(bindToLifecycle())
                 .subscribe(adapter::addItems,
@@ -97,7 +94,7 @@ public class PullRequestsActivity extends RxAppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
 
-        adapter.setUserProvider(github::user);
+        adapter.setUserProvider(u -> githubApi().user(u).compose(bindToLifecycle()));
         adapter.setOnItemClickListener(this::onItemClick);
 
         recyclerView.setAdapter(adapter);
