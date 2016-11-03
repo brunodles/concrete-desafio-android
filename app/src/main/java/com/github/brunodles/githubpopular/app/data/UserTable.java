@@ -5,19 +5,19 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
+import com.github.brunodles.database.Db;
 import com.github.brunodles.githubpopular.api.dto.User;
-import com.github.brunodles.sqlhelper.SqlHelper;
+import com.github.brunodles.database.sqlhelper.SqlHelper;
 import com.squareup.sqlbrite.BriteDatabase;
-import com.squareup.sqlbrite.SqlBrite;
 
 import java.util.List;
 
 import rx.Observable;
 import rx.functions.Func1;
 
-import static com.github.brunodles.sqlhelper.CreateBuilder.INTEGER;
-import static com.github.brunodles.sqlhelper.CreateBuilder.PK;
-import static com.github.brunodles.sqlhelper.CreateBuilder.TEXT;
+import static com.github.brunodles.database.sqlhelper.CreateBuilder.INTEGER;
+import static com.github.brunodles.database.sqlhelper.CreateBuilder.PK;
+import static com.github.brunodles.database.sqlhelper.CreateBuilder.TEXT;
 
 public final class UserTable {
 

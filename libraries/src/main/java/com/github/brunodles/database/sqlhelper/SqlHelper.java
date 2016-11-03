@@ -1,4 +1,4 @@
-package com.github.brunodles.sqlhelper;
+package com.github.brunodles.database.sqlhelper;
 
 /**
  * Created by bruno on 19/10/16.

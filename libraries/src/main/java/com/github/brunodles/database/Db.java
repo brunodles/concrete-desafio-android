@@ -1,12 +1,11 @@
-package com.github.brunodles.githubpopular.app.data;
+package com.github.brunodles.database;
 
 import android.database.Cursor;
+import android.support.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 import rx.Observable;
 import rx.functions.Func1;

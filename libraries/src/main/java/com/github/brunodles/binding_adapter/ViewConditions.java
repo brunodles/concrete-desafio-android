@@ -4,7 +4,7 @@ import android.databinding.BindingAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.brunodles.githubpopular.app.R;
+import com.github.brunodles.R;
 
 /**
  * Created by bruno on 02/11/16.
