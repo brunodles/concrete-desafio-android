@@ -18,7 +18,6 @@ import com.github.brunodles.githubpopular.app.R;
 import com.github.brunodles.githubpopular.app.application.GithubApplication;
 import com.github.brunodles.githubpopular.app.databinding.ActivityListPullRequestBinding;
 import com.github.brunodles.githubpopular.app.databinding.NavigationDrawerLayoutBinding;
-import com.github.brunodles.githubpopular.app.view.toolbar.ToolbarTipOffsetListener;
 import com.github.brunodles.recyclerview.VerticalSpaceItemDecoration;
 import com.github.brunodles.utils.LogRx;
 import com.trello.rxlifecycle.android.ActivityEvent;
@@ -79,7 +78,7 @@ public class PullRequestsActivity extends RxAppCompatActivity {
         Subscription subscription = github.pullRequests(repository.owner.login, repository.name)
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(bindToLifecycle())
-                .subscribe(adapter::addList,
+                .subscribe(adapter::addItems,
                         LogRx.e(TAG, "loadPage: failed to load pull requests"));
         subscriptions.add(subscription);
 
@@ -119,13 +118,13 @@ public class PullRequestsActivity extends RxAppCompatActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         ArrayList<PullRequest> list = Parcels.unwrap(savedInstanceState.getParcelable(STATE_LIST));
-        adapter.setList(list);
+        adapter.setItems(list);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Parcelable wrap = Parcels.wrap(new ArrayList<>(adapter.getList()));
+        Parcelable wrap = Parcels.wrap(new ArrayList<>(adapter.getItems()));
         outState.putParcelable(STATE_LIST, wrap);
     }
 }

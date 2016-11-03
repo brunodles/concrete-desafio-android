@@ -6,17 +6,19 @@ package com.github.brunodles.recyclerview;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import rx.functions.Action1;
 
 public final class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
+    private static final String TAG = "EndlessRecyclerOnScroll";
 
     private int previousTotal = 0; // The total number of items in the dataset after the last load
     private boolean loading = true; // True if we are still waiting for the last set of data to load.
-    private int visibleThreshold = 5; // The minimum amount of items to have below your current scroll position before loading more.
+    private int visibleThreshold = 10; // The minimum amount of items to have below your current scroll position before loading more.
     int firstVisibleItem, visibleItemCount, totalItemCount;
 
-    private int current_page = 1;
+    private int nextPage = 1;
 
     private final LinearLayoutManager mLinearLayoutManager;
     private final Action1<Integer> loader;
@@ -24,8 +26,6 @@ public final class EndlessRecyclerOnScrollListener extends RecyclerView.OnScroll
     public EndlessRecyclerOnScrollListener(LinearLayoutManager linearLayoutManager, Action1<Integer> loader) {
         this.mLinearLayoutManager = linearLayoutManager;
         this.loader = loader;
-
-        if (firstVisibleItem == 0) loader.call(current_page++);
     }
 
     @Override
@@ -47,11 +47,32 @@ public final class EndlessRecyclerOnScrollListener extends RecyclerView.OnScroll
             // End has been reached
 
             // Do something
-            current_page++;
-
-            loader.call(current_page);
-
-            loading = true;
+            load();
         }
+    }
+
+    public void load() {
+        loader.call(nextPage++);
+        loading = true;
+    }
+
+    public EndlessRecyclerOnScrollListener setVisibleThreshold(int visibleThreshold) {
+        this.visibleThreshold = visibleThreshold;
+        return this;
+    }
+
+    public EndlessRecyclerOnScrollListener setNextPage(int nextPage) {
+        Log.d(TAG, "setNextPage() called with: nextPage = [" + nextPage + "]");
+        this.nextPage = nextPage;
+        return this;
+    }
+
+    public int getNextPage() {
+        Log.d(TAG, "getNextPage() returned: " + nextPage);
+        return nextPage;
+    }
+
+    public void loadFirstIfNeeded() {
+        if (nextPage == 1) load();
     }
 }

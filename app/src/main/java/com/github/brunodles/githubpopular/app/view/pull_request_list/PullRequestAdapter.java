@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 
 import com.github.brunodles.adapter.RecyclerViewAdapter;
 import com.github.brunodles.githubpopular.api.dto.PullRequest;
-import com.github.brunodles.githubpopular.api.dto.Repository;
 import com.github.brunodles.githubpopular.api.dto.User;
 import com.github.brunodles.githubpopular.app.databinding.ItemPullRequestBinding;
 import com.github.brunodles.utils.LogRx;
@@ -35,7 +34,7 @@ public class PullRequestAdapter extends RecyclerViewAdapter<PullRequest, PullReq
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.cancelSubscription();
-        PullRequest pullRequest = list.get(position);
+        PullRequest pullRequest = items.get(position);
         holder.binding.setUser(null);
         holder.binding.setPullRequest(pullRequest);
         if (provider != null) {

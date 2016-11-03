@@ -34,7 +34,7 @@ public class RepositoryAdapter extends RecyclerViewAdapter<Repository, Repositor
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.cancelSubscription();
-        Repository repository = list.get(position);
+        Repository repository = items.get(position);
         holder.binding.setUser(null);
         holder.binding.setRepository(repository);
         if (provider != null) {

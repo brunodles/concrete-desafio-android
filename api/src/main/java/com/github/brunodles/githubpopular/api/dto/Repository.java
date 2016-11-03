@@ -10,7 +10,8 @@ public class Repository {
     public String name;
     public String full_name;
     public UserShort owner;
-    @SerializedName("private") public Boolean isPrivate;
+    @SerializedName("private")
+    public Boolean isPrivate;
     public String html_url;
     public String description;
     public Boolean fork;
@@ -74,4 +75,19 @@ public class Repository {
     public Long open_issues;
     public Long watchers;
     public String default_branch;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Repository that = (Repository) o;
+
+        return id != null ? id.equals(that.id) : that.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }
